@@ -42,28 +42,4 @@ cd "${INPUT_DIRECTORY}"
 
 remote_repo="https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git"
 
-git config http.sslVerify false
-git config --local user.email "${INPUT_AUTHOR_EMAIL}"
-git config --local user.name "${INPUT_AUTHOR_NAME}"
-
-git add -A
-
-if ${INPUT_AMEND}; then
-    if [ -n "${INPUT_COAUTHOR_EMAIL}" ] && [ -n "${INPUT_COAUTHOR_NAME}" ]; then
-        git commit ${_AMEND} -m "${INPUT_MESSAGE}
-
-    Co-authored-by: ${INPUT_COAUTHOR_NAME} <${INPUT_COAUTHOR_EMAIL}>" || exit 0
-    else
-    git commit ${_AMEND} -m "${INPUT_MESSAGE}" $_EMPTY || exit 0
-    fi
-
-elif [ -n "${INPUT_COAUTHOR_EMAIL}" ] && [ -n "${INPUT_COAUTHOR_NAME}" ]; then
-    git commit -m "${INPUT_MESSAGE}
-    
-
-Co-authored-by: ${INPUT_COAUTHOR_NAME} <${INPUT_COAUTHOR_EMAIL}>" $_EMPTY || exit 0
-else
-    git commit -m "${INPUT_MESSAGE}" $_EMPTY || exit 0
-fi
-
 git push "${remote_repo}" HEAD:"${INPUT_BRANCH}" --follow-tags $_FORCE_OPTION $_TAGS;
